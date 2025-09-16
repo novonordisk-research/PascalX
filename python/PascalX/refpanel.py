@@ -74,7 +74,7 @@ class refpanel:
         
         return db
     
-    def set_refpanel(self,filename, parallel=1, keepfile=None, qualityT=100, SNPonly=False, chrlist=None, sourcefilename=None,regEx=None,nobar=True):
+    def set_refpanel(self,filename=None, parallel=1, keepfile=None, qualityT=100, SNPonly=False, chrlist=None, sourcefilename=None,regEx=None,nobar=True):
         """
         Sets the reference panel to use
         
@@ -100,19 +100,24 @@ class refpanel:
             Alleles (under .vcf import) are stored internally in the order [ALT,REF].
             
         """
+
+        if filename is None and sourcefilename is None:
+            raise ValueError("No reference panel filename given. Please set a filename or sourcefilename.")
+
         self._refData = filename
         self._srcData = sourcefilename
-        
-        if chrlist is None:
-            NF = []
-            for i in range(1,23):
-                if not os.path.isfile(filename+".chr"+str(i)+".idx.gz") or not os.path.isfile(filename+".chr"+str(i)+".db"):
-                    NF.append(i)
-        else: 
-            NF = []
-            for i in chrlist:
-                if not os.path.isfile(filename+".chr"+str(i)+".idx.gz") or not os.path.isfile(filename+".chr"+str(i)+".db"):
-                    NF.append(i)
+
+        NF = []
+
+        if filename is not None:
+            if chrlist is None:
+                for i in range(1,23):
+                    if not os.path.isfile(filename+".chr"+str(i)+".idx.gz") or not os.path.isfile(filename+".chr"+str(i)+".db"):
+                        NF.append(i)
+            else:
+                for i in chrlist:
+                    if not os.path.isfile(filename+".chr"+str(i)+".idx.gz") or not os.path.isfile(filename+".chr"+str(i)+".db"):
+                        NF.append(i)
             
         # Import if missing
         if len(NF) > 0:
