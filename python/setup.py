@@ -35,6 +35,7 @@ setup(
     long_description=open('README.md').read(),
     install_requires=[
 	"cffi>=1.0.0",
+    "contourpy<=1.2.1",
 	"matplotlib!=3.6.1,>=3.1",
 	"sortedcontainers>=2.1.0",
 	"tqdm>=4.43.0",
